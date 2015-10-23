@@ -1,0 +1,14 @@
+language: java
+version: oraclejdk8
+script:
+   - echo 'script run'
+   - mvn clean package -U -Dmaven.test.skip=true -f @prj@-core/pom.xml
+after_success:
+   - sh @prj@-dist/@prj@-@pack@-service/ci_success.sh
+outfile:
+   - outfile
+notifications:
+   email:
+      - ruofei.han@ele.me
+branch:
+   dev_weixin: alpha_stable

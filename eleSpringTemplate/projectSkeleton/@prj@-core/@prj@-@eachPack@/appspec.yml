@@ -1,0 +1,9 @@
+appid: @orgPath@.scm.@prj@.api
+version: 1.0.0
+os: linux
+language: java
+apptype: web
+hooks:
+  ValidateService:
+    - location: ./validate.sh
+      timeout: 15

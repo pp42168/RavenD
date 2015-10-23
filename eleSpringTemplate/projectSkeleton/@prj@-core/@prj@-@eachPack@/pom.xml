@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <parent>
+        <artifactId>@prj@-core</artifactId>
+        <groupId>@orgPath@</groupId>
+        <version>0.0.1-SNAPSHOT</version>
+    </parent>
+    <modelVersion>4.0.0</modelVersion>
+    <artifactId>@prj@-@pack@</artifactId>
+    <name>@prj@-@pack@</name>
+    <packaging>jar</packaging>
+    <version>${@prj@.version}</version>
+
+    <dependencies>
+        <dependency>
+            <groupId>eleme-jarch</groupId>
+            <artifactId>pylon-contract</artifactId>
+            <version>${pylon.version}</version>
+        </dependency>
+    </dependencies>
+
+        <distributionManagement>
+        <repository>
+            <id>scm</id>
+            <name>scm-release</name>
+            <url>http://maven.dev.elenet.me/nexus/content/repositories/ele-scm-release/</url>
+        </repository>
+
+        <snapshotRepository>
+            <id>scm</id>
+            <name>scm-snopshots</name>
+            <url>http://maven.dev.elenet.me/nexus/content/repositories/ele-scm-snapshots/</url>
+        </snapshotRepository>
+    </distributionManagement>
+    
+    <build>
+        <plugins>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-compiler-plugin</artifactId>
+                <version>2.5.1</version>
+                <configuration>
+                    <source>${java.version}</source>
+                    <target>${java.version}</target>
+                    <compilerArgument>-Xlint:all</compilerArgument>
+                    <showWarnings>true</showWarnings>
+                    <showDeprecation>true</showDeprecation>
+                </configuration>
+            </plugin>
+        </plugins>
+    </build>
+</project>

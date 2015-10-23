@@ -1,0 +1,12 @@
+db.driver=com.mysql.jdbc.Driver
+db.url=jdbc:mysql://{{_ .CON_MYSQL_IP}}:{{_ .CON_MYSQL_PORT}}/{{_ .CON_MYSQL_DB}}?useUnicode=true&characterEncoding=utf8
+db.username={{_ .CON_MYSQL_UN}}
+db.password={{_ .CON_MYSQL_PW}}
+
+redis.pool.maxActive=2000 
+redis.pool.maxIdle=500
+redis.pool.maxWait=10000 
+redis.pool.testOnBorrow=true 
+redis.port={{_ .CON_REDIS_PORT}} 
+redis.hostname={{_ .CON_REDIS_IP}}
+redis.password={{_ .CON_REDIS_PW}}

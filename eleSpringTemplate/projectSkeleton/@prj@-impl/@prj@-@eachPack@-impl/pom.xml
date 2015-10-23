@@ -1,0 +1,98 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+
+    <parent>
+        <artifactId>@prj@-impl</artifactId>
+        <groupId>@orgPath@</groupId>
+        <version>0.0.1-SNAPSHOT</version>
+        <relativePath>../pom.xml</relativePath>
+    </parent>
+    <modelVersion>4.0.0</modelVersion>
+    <artifactId>@prj@-@pack@-impl</artifactId>
+    <name>@prj@-@pack@-impl</name>
+    <packaging>jar</packaging>
+    <version>${@prj@.version}</version>
+
+    <dependencies>
+        <dependency>
+            <groupId>@orgPath@</groupId>
+            <artifactId>@prj@-@pack@</artifactId>
+            <version>${@prj@.version}</version>
+        </dependency>
+
+        <dependency>
+            <groupId>me.ele</groupId>
+            <artifactId>mercurius-common</artifactId>
+            <version>${mercurius.version}</version>
+        </dependency>
+        
+        <dependency>
+            <groupId>eleme-jarch</groupId>
+            <artifactId>utility-elog</artifactId>
+            <version>2.2.3-RELEASE</version>
+        </dependency>   
+        
+        <!-- add metrics hrf -->
+        <dependency>
+        <groupId>eleme-jarch</groupId>
+        <artifactId>utility-metrics</artifactId>
+        <version>2.2.11-RELEASE</version>
+        </dependency>
+         <!-- add metrics hrf -->
+
+    </dependencies>
+
+    <build>
+        <plugins>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-shade-plugin</artifactId>
+                <version>2.3</version>
+                <executions>
+                    <execution>
+                        <phase>package</phase>
+                        <goals>
+                            <goal>shade</goal>
+                        </goals>
+                        <configuration>
+                            <filters>
+                                <filter>
+                                    <artifact>*:*</artifact>
+                                    <excludes>
+                                        <exclude>META-INF/*.SF</exclude>
+                                        <exclude>META-INF/*.DSA</exclude>
+                                        <exclude>META-INF/*.RSA</exclude>
+                                    </excludes>
+                                </filter>
+                            </filters>
+                            <createDependencyReducedPom>false</createDependencyReducedPom>
+                            <transformers>
+                                <transformer
+                                        implementation="org.apache.maven.plugins.shade.resource.AppendingTransformer">
+                                    <resource>META-INF/spring.handlers</resource>
+                                </transformer>
+                                <transformer
+                                        implementation="org.apache.maven.plugins.shade.resource.AppendingTransformer">
+                                    <resource>META-INF/spring.schemas</resource>
+                                </transformer>
+                            </transformers>
+                        </configuration>
+                    </execution>
+                </executions>
+            </plugin>
+        </plugins>
+        <resources>
+            <resource>
+                <directory>src/main/java</directory>
+                <includes>
+                    <include>**/*.properties</include>
+                    <include>**/*.xml</include>
+                </includes>
+                <filtering>false</filtering>
+            </resource>
+        </resources>
+    </build>
+
+</project>

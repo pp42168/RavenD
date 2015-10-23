@@ -1,0 +1,18 @@
+{
+  "commonConf": {
+    "group": "stable",
+    "registerUrl": "{{_ .ELE_SOA_REG_URL}}",
+    "configCenterUrl": "{{_ .ELE_ZK_URL}}",
+    "auth":"{{_ .ELE_ZK_AUTH}}"
+  },
+  "clientConfs": [{
+    "clientName": "@orgPath@.scm.@prj@.service",
+    "protocol": "json",
+    "threadPoolSize": {{_ .APP_WORKERS}},
+    "timeoutInMillis": 5000,
+    "lbStrategy": "rr",
+    "interfaces": [
+       "@orgPath@.@prj@.@eachDependPack@.service.@^eachDependPack@Service"
+    ]
+  }]
+}

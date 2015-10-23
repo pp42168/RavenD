@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE configuration PUBLIC "-//mybatis.org//DTD Config 3.0//EN" "http://mybatis.org/dtd/mybatis-3-config.dtd">
+<configuration>
+	<settings>
+		<setting name="cacheEnabled" value="true" />
+		<setting name="defaultStatementTimeout" value="1" />
+		<!-- 开启驼峰，开启后，只要数据库字段和对象属性名字母相同，无论中间加多少下划线都可以识别 -->
+		<setting name="mapUnderscoreToCamelCase" value="true" />
+	</settings>
+	<!-- mapper 拦截器配置 此配置必须，否则会报错 -->
+	<plugins>
+		<plugin interceptor="tk.mybatis.mapper.mapperhelper.MapperInterceptor">
+			<property name="IDENTITY" value="MYSQL" />
+			<property name="seqFormat" value="{0}.nextval" />
+			<property name="mappers" value="tk.mybatis.mapper.common.Mapper" />
+		</plugin>
+	</plugins>
+</configuration>
