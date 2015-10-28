@@ -10,3 +10,45 @@
 
 # virtual machine crash logs, see http://www.java.com/en/download/help/error_hotspot.xml
 hs_err_pid*
+
+ass
+/*/.*
+/*/*/.*
+/*/*/*/.*
+/*/*/*/*/.*
+/*/class/*
+/*/classes/*
+/*/.gitignore
+/*/*/target/*
+# Mobile Tools for Java (J2ME)
+.mtj.tmp/
+
+# Package Files #
+*.jar
+*.war
+*.ear
+
+database.properties
+inner.properties
+
+# virtual machine crash logs, see http://www.java.com/en/download/help/error_hotspot.xml
+hs_err_pid*
+/*/.settings/*
+/*/target/*
+/target/
+/*/bin/*
+/*/log/*
+
+# jetbrains project files
+/*/.idea/
+.DS_Store
+.springBeans
+*.iml
+# eclipse project files
+*.classpath
+*.project
+logback.xml
+.settings/*
+
+#idea
+.idea/
