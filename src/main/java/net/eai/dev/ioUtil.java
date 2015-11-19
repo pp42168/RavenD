@@ -135,6 +135,11 @@ public class ioUtil {
 		return line;
 	}
 	
+	static public String capFirstLetter(String value)
+	{
+		return value.toUpperCase().substring(0, 1) + value.substring(1,value.length());
+	}
+	
 	static public boolean containF(String line,String token)
 	{
 		if(line.contains("@" + token + "@"))

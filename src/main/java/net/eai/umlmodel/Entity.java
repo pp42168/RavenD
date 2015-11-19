@@ -7,11 +7,11 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.LinkedHashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Map.Entry;
 
 import net.eai.dev.ioUtil;
 import net.eai.dev.entitycg.*;
-
 
 import com.google.gson.Gson;
 
@@ -707,7 +707,7 @@ public class Entity {
 				attType = (String) att.getType();
 			else{
 				
-				LinkedHashMap data = (LinkedHashMap)att.getType();
+				Map data = (Map)att.getType();
 				String ref = (String) data.get("$ref");
 				Entity referencedEntity = (Entity) StarUmlObjectContainer.getObject(ref);
 				if(referencedEntity != null)
@@ -786,7 +786,7 @@ public class Entity {
     					if("class java.lang.String".equals(typeName))
         					typeName = (String) onePara.getType();
         				else{        				
-        					LinkedHashMap data = (LinkedHashMap)onePara.getType();
+        					Map data = (Map)onePara.getType();
         					String ref = (String) data.get("$ref");
         					Entity referencedEntity = (Entity) StarUmlObjectContainer.getObject(ref);
         					if(referencedEntity != null)

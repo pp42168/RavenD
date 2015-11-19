@@ -2,6 +2,7 @@ package net.eai.umlmodel;
 
 import java.util.LinkedHashMap;
 import java.util.List;
+import java.util.Map;
 
 import com.google.gson.Gson;
 
@@ -24,8 +25,8 @@ public class ModelCollector {
 		{
 			Object obj = ownedElements.get(i);
 			Entity entity = null;
-			if(obj.getClass().toString().contains("LinkedHashMap"))			
-				entity = getEntity((LinkedHashMap)ownedElements.get(i));			
+			if(obj.getClass().toString().contains("Map"))			
+				entity = getEntity((Map)ownedElements.get(i));			
 			else if(obj.getClass().toString().contains("DEVPackage"))
 				entity = (Entity)ownedElements.get(i);	
 			
@@ -39,7 +40,7 @@ public class ModelCollector {
 		return false;
 	}
 	
-	private Entity getEntity(LinkedHashMap data)
+	private Entity getEntity(Map data)
 	{
 		Gson gson = new Gson();
 		Entity entity = null;
@@ -52,7 +53,7 @@ public class ModelCollector {
 	}
 	
 
-	private DEVPackage getPackage(LinkedHashMap data)
+	private DEVPackage getPackage(Map data)
 	{
 		
 		Gson gson = new Gson();
@@ -77,8 +78,8 @@ public class ModelCollector {
 			Object obj = ownedElements.get(i);
 			DEVPackage devPackage = null;
 			String type = obj.getClass().toString();
-			if(obj.getClass().toString().contains("LinkedHashMap"))			
-				 devPackage = getPackage((LinkedHashMap)ownedElements.get(i));			
+			if(obj.getClass().toString().contains("Map"))			
+				 devPackage = getPackage((Map)ownedElements.get(i));			
 			else if(obj.getClass().toString().contains("DEVPackage"))
 				 devPackage = (DEVPackage)ownedElements.get(i);	
 			
@@ -102,6 +103,7 @@ public class ModelCollector {
 	}
 	
 
+	
 	public void  collectPacks()
 	{
 		

@@ -3,6 +3,7 @@ package net.eai.umlmodel;
 import com.google.gson.Gson;
 
 import net.eai.dev.ioUtil;
+import net.eai.umlcg.decorator.ServiceDecorator;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -38,27 +39,18 @@ public class DEVProject {
 		{
 			collector.collectPacks();
 			
-			
-			List<DEVPackage> ownedElements = (List<DEVPackage>) devProject.getOwnedElements();
-			
-			
-			/*
-			for(int i = 0;i<ownedElements.size();i++)
-			{
-				DEVPackage devPackage = ownedElements.get(i);
-				devPackage.normalizeTypes();
-			}*/
-			
-			
 			for(DEVPackage devPackage:devProject.getPackages())
 			{
 				devPackage.normalizeTypes();
+				new ServiceDecorator(devPackage);
 			}
 
 			for(DEVPackage devPackage:devProject.getApiPacks())
 			{
 				devPackage.normalizeTypes();
 			}
+			
+			
 			
 		}
 		
@@ -157,10 +149,10 @@ public class DEVProject {
 	public void setName(String name) {
 		this.name = name;
 	}
-	public List<DEVPackage> getOwnedElements() {
+	public List<DEVPackage > getOwnedElements() {
 		return ownedElements;
 	}
-	public void setOwnedElements(List<DEVPackage> ownedElements) {
+	public void setOwnedElements(List<DEVPackage > ownedElements) {
 		this.ownedElements = ownedElements;
 	}
 }

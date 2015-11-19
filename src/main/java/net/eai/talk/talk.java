@@ -7,6 +7,7 @@ import java.util.Scanner;
 
 import net.eai.dev.DataMapper;
 import net.eai.dev.JsonClassGen;
+import net.eai.dev.UmlException;
 import net.eai.dev.ioUtil;
 import net.eai.umlcg.basecg.*;
 import net.eai.umlcg.framework.elespring.ESServiceFramework;
@@ -16,8 +17,17 @@ public class talk {
 	public static void main(String[] args) {
 		
 		
-		Listener listener = new Listener();		
-		listener.listenCommand();
+		//Listener listener = new Listener();		
+		//listener.listenCommand();
+		UmlCG cg = new UmlCG();
+		
+		try {
+			cg.gen("sso.mdj", "../jj");
+		} catch (UmlException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		
 		
 		/*
 		if(args.length == 0)
@@ -54,7 +64,7 @@ public class talk {
 	//	ioUtil.genPathWithTemplate("eleSpringTemplate", "../testProject/aa", "dd");
 
 		///DEVProject project = DEVProject.importFromJson("../baseSettings/base.js");
-		DEVProject project = DEVProject.importFromJson("../testProject/Fragment.js");
+	/*	DEVProject project = DEVProject.importFromJson("../testProject/Fragment.js");
 		project.setProjectPath("../Mercurius");
 		
 		
@@ -73,7 +83,7 @@ public class talk {
 		//skeleton.addFilter("weixin");
 		skeleton.setFramework(es);		
 		skeleton.setM_orgPath("me.ele");
-		skeleton.genCodeSkeleton();		
+		skeleton.genCodeSkeleton();		*/
 		
 		/*
 		FrameworkManager m = new FrameworkManager();		

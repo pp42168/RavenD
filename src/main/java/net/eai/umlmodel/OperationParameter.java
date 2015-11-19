@@ -1,6 +1,7 @@
 package net.eai.umlmodel;
 
 import java.util.LinkedHashMap;
+import java.util.Map;
 
 public class OperationParameter<T> {
 	private String name;
@@ -34,7 +35,7 @@ public class OperationParameter<T> {
 				attType = (String) type;
 			else{
 				
-				LinkedHashMap data = (LinkedHashMap)type;
+				Map data = (Map)type;
 				String ref = (String) data.get("$ref");
 				Entity referencedEntity = (Entity) StarUmlObjectContainer.getObject(ref);
 				if(referencedEntity != null)

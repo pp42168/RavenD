@@ -5,6 +5,7 @@ import com.google.gson.Gson;
 
 import net.eai.dev.ioUtil;
 import net.eai.dev.entitycg.*;
+import net.eai.umlcg.decorator.ServiceDecorator;
 
 import java.text.MessageFormat;
 import java.util.*;
@@ -74,6 +75,18 @@ public class DEVPackage<T> {
     }
 
 
+	private static Entity getEntity(Map data)
+	{
+		Gson gson = new Gson();
+		Entity entity = null;
+	    String type = (String) data.get("_type");
+	    if (type.equals("UMLClass")) {
+	         String eleJson = gson.toJson(data);
+	         entity = gson.fromJson(eleJson, Entity.class);
+	    }
+		return entity;
+	}
+	
     @SuppressWarnings("rawtypes")
     public static void initDevPackage(DEVPackage devPackage) {
 
@@ -94,7 +107,9 @@ public class DEVPackage<T> {
                 Object aa = ownedElements.get(i);
                 if (aa.getClass().toString().contains("Entity")) {
                     entity = (Entity) aa;
-                } else {
+                } else if(aa.getClass().toString().contains("Map")){
+                	entity = getEntity((Map)aa);
+                	/*
                     LinkedHashMap data = (LinkedHashMap) ownedElements.get(i);
                     String type = (String) data.get("_type");
                     String id = (String) data.get("_id");
@@ -102,7 +117,7 @@ public class DEVPackage<T> {
                     if (type.equals("UMLClass")) {
                         String eleJson = gson.toJson(data);
                         entity = gson.fromJson(eleJson, Entity.class);
-                    }
+                    }*/
                 }
 
                 if (entity != null) {
@@ -117,14 +132,6 @@ public class DEVPackage<T> {
                     ownedElements.set(i, entity);
 
 
-                    //auto generate ApiManage Entity
-                    /*
-                    if (entity.getStereotype() != null && entity.getStereotype().equals("Entity")) {
-                        EntityOperation entityManageOp = new EntityOperation(entityManageApi);
-                        entityManageOp.setName("manage" + entity.getName());
-                        entityManageApi.addOperation(entityManageOp);
-                        entityManageApi.addDepend(entity.getName(), entity);
-                    }*/
                 }
 
 
@@ -142,9 +149,9 @@ public class DEVPackage<T> {
 			for(Object obj:this.getOwnedElements())
 			{
 				String objType = obj.getClass().toString();
-				if("class java.util.LinkedHashMap".equals(objType))
+				if(objType.contains("Map"))
 				{
-					LinkedHashMap map = (LinkedHashMap) obj;
+					Map map = (Map) obj;
 					if("dependency".equals(map.get("_type")))
 					{
 						Gson gson = new Gson();
@@ -217,6 +224,7 @@ public class DEVPackage<T> {
         this.framework = framework;
     }
 
+    
 
 
     public String[] exportDotNetCode(String path) {
