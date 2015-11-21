@@ -396,10 +396,10 @@ public class CodeSkeletonBuilder {
 						else if(ioUtil.containF(line, "eachApiPack"))
 				 		{
 				 			for(DEVPackage onePack:m_project.getApiPacks())
-					    		{
-					 				String oneLine =  ioUtil.replaceF(line,"eachApiPack", onePack.getName());
-					 				content += oneLine + "\n";
-					    		}
+				 			{
+				 				String oneLine =  ioUtil.replaceF(line,"eachApiPack", onePack.getName());
+				 				content += oneLine + "\n";
+				 			}
 				 		}
 						else{
 							content += line + "\n"; 

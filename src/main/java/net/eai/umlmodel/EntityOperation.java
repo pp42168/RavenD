@@ -12,6 +12,7 @@ public class EntityOperation {
 	private String _id;
 	private String visibility;
 	private String documentation;
+	private String stereotype;
 	private List<UMLCollaboration> ownedElements;
 	private String _type = "UMLOperation";
 	private StarUmlReference _parent;
@@ -148,5 +149,15 @@ public class EntityOperation {
 
 	public void set_parent(StarUmlReference _parent) {
 		this._parent = _parent;
+	}
+
+
+	public String getStereotype() {
+		return stereotype;
+	}
+
+
+	public void setStereotype(String stereotype) {
+		this.stereotype = stereotype;
 	}
 }

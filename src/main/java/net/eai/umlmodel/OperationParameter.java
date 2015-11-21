@@ -7,6 +7,7 @@ public class OperationParameter<T> {
 	private String name;
 	private T type;
 	private String direction;
+	private String stereotype;
 	private String multiplicity;
 	private String _type = "UMLParameter";
 	private String _id ;
@@ -75,5 +76,13 @@ public class OperationParameter<T> {
 
 	public void setMultiplicity(String multiplicity) {
 		this.multiplicity = multiplicity;
+	}
+
+	public String getStereotype() {
+		return stereotype;
+	}
+
+	public void setStereotype(String stereotype) {
+		this.stereotype = stereotype;
 	}
 }

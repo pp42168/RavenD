@@ -42,7 +42,8 @@ public class DEVProject {
 			for(DEVPackage devPackage:devProject.getPackages())
 			{
 				devPackage.normalizeTypes();
-				new ServiceDecorator(devPackage);
+				ServiceDecorator dec = new ServiceDecorator(devPackage);
+				devProject.addWebApi(dec.genApiPack());
 			}
 
 			for(DEVPackage devPackage:devProject.getApiPacks())

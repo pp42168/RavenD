@@ -17,16 +17,16 @@ public class talk {
 	public static void main(String[] args) {
 		
 		
-		//Listener listener = new Listener();		
-		//listener.listenCommand();
-		UmlCG cg = new UmlCG();
+		Listener listener = new Listener();		
+		listener.listenCommand();
+		/*	UmlCG cg = new UmlCG();
 		
 		try {
 			cg.gen("sso.mdj", "../jj");
 		} catch (UmlException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
-		}
+		}*/
 		
 		
 		/*

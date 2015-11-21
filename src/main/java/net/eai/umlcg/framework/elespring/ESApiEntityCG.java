@@ -107,51 +107,6 @@ public class ESApiEntityCG implements EntityCG{
 		return code;
 	}
 
-	private String genApiMoking(EntityOperation op)
-	{
-		String responseContractName = ioUtil.replaceF("@^t@", "t", op.getName()) + "ResponseDto";
-		
-		String code = "\r\n\t\t" + responseContractName + " responseDto = new " +  responseContractName + "();\r\n";
-		Entity e = findContract(m_packCG.getPackage(),responseContractName);
-		if(e != null)
-		{
-			for(EntityAttribute att:e.getAttributes())
-			{
-				String setter = "set" + ioUtil.replaceF("@^t@", "t", att.getName());
-				code += "\t\tresponseDto." + setter  + "(";
-				
-				String attType = att.getTypeStr();
-				if(att.getDefaultValue() != null)
-				{
-					if(attType.equals("String"))
-						code += "\"" + att.getDefaultValue() + "\"";
-					else
-						code += att.getDefaultValue();
-				}
-				else if(attType.equals("String"))
-				{
-					code += "\"" + att.getName() + "Value\"";
-				}
-				else if(attType.equals("int") || attType.equals("Integer") || attType.equals("long") || attType.equals("BigInteger"))
-				{
-					code += "1";
-				}
-				else if(attType.equals("double") || attType.equals("float")  || attType.equals("Double")  || attType.equals("BigDecimal") )
-				{
-					code += "12.34" ;
-				}
-				else if(attType.equals("Date"))
-				{
-					code += "new Date()";
-				}
-				
-				code += ");\r\n";
-			}
-		}
-		//@^opName@ResponseDto responseDto = @callService@;
-		return code;
-	}
-
 	@Override
 	public void setTargetPath(String targetPath) {
 		// TODO Auto-generated method stub
