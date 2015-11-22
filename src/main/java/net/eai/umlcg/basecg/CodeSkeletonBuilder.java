@@ -377,6 +377,8 @@ public class CodeSkeletonBuilder {
 									{
 										String oneLine =  ioUtil.replaceF(line, "eachAtt", att.getName());
 										oneLine =  ioUtil.replaceF(oneLine, "attType", att.getTypeStr());
+										oneLine =  ioUtil.replaceF(oneLine, "eachAtt.document", att.getDocumentation());
+										oneLine =  ioUtil.replaceF(oneLine, "eachAtt.default", att.getDefaultValue());
 										content += oneLine + "\n";								
 									}
 								}

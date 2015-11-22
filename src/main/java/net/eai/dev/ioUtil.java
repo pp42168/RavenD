@@ -107,6 +107,10 @@ public class ioUtil {
 	
 	static public String replaceF(String line,String token,String value)
 	{
+		if(value == null)
+			return line;
+		
+		
 		line = line.replace("@" + token + "@", value);
 
 		line = line.replace("@^" + token + "@", 
@@ -124,8 +128,12 @@ public class ioUtil {
 
 		line = line.replace("@." + token + "@", 
 				 value.toLowerCase().substring(0, 1) + value.substring(1,value.length()));
-		
 
+		line = line.replace("@_^" + token + "@", 
+				convertAttSpellToColumnSpell(value).toUpperCase());
+
+		line = line.replace("@_" + token + "@", 
+				convertAttSpellToColumnSpell(value));
 		line = line.replace("@_" + token + "@", 
 				convertAttSpellToColumnSpell(value));
 		
@@ -153,6 +161,8 @@ public class ioUtil {
 		else if(line.contains("@^^" + token + "@"))
 			return true;
 		else if(line.contains("@_" + token + "@"))
+			return true;
+		else if(line.contains("@_^" + token + "@"))
 			return true;
 		else if(line.contains("@~" + token + "@"))
 			return true;
