@@ -238,6 +238,7 @@ public class CodeSkeletonBuilder {
  			processed = processed || processEachFile("Api", file, targetFileName, pack, targetPath);
  			processed = processed || processEachFile("Service", file, targetFileName, pack, targetPath);
  			processed = processed || processEachFile("Contract", file, targetFileName, pack, targetPath);
+ 			processed = processed || processEachFile("Exception", file, targetFileName, pack, targetPath);
  			
  			if(!processed){
 
@@ -381,6 +382,18 @@ public class CodeSkeletonBuilder {
 								}
 								else
 									content += genEachEntity(line,pack) + "\n"; 
+							}
+							else if(ioUtil.containF(line, "eachService"))
+							{
+								for(Object o:pack.getEntities().values())
+								{
+									Entity e = (Entity) o;
+									if("Service".equals(e.getStereotype()))
+									{
+										String oneLine =  ioUtil.replaceF(line, "eachService", e.getName());
+										content += oneLine + "\n";	
+									}																
+								}
 							}
 							else
 								content += genEachEntity(line,pack) + "\n"; 
