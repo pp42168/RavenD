@@ -43,6 +43,7 @@ public class DEVProject {
 			{
 				devPackage.normalizeTypes();
 				ServiceDecorator dec = new ServiceDecorator(devPackage);
+				dec.addContract();
 				devProject.addWebApi(dec.genApiPack());
 			}
 
