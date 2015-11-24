@@ -1,7 +1,10 @@
-	public @^op@ResponseDto @.op@(@^op@RequestDto request) throws Exception
+	public @^op@Response @.op@(@^op@Request request) throws Exception
 	{	
 		try {
-				@mock@
+			@mock@
+
+			@flow@
+
 			return responseDto;
 		} catch (SystemException e) {
 			throw e;

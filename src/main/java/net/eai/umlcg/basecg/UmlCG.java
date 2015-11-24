@@ -18,7 +18,7 @@ public class UmlCG {
 
 	public UmlCG()
 	{
-		templatePath = "../eleSpringTemplate";
+		templatePath = "eleSpringTemplate";
 		es = new ESServiceFramework("",templatePath);	
 	}
 

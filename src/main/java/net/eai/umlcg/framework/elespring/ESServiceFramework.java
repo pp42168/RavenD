@@ -42,6 +42,7 @@ public class ESServiceFramework  implements FrameworkInterface{
 		res.add(new ESApiEntityCG((ESPackageCG) packCG,m_templatePath,m_targetPath));
 		res.add(new ESSqlSchemaCG((ESPackageCG) packCG,m_templatePath,m_targetPath));
 		res.add(new ESServiceCG((ESPackageCG) packCG,m_templatePath,m_targetPath));
+		res.add(new ESApiDocCG((ESPackageCG) packCG,m_templatePath,m_targetPath));
 		
 		
 		return res;

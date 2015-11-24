@@ -440,26 +440,28 @@ public class CodeSkeletonBuilder {
 	{
 		String content = "";
 		
-		if(line.contains("@eachEntity@")){
+		
+		if(ioUtil.containF(line, "eachEntity")){
 			
 			for(Object oneObject:pack.getEntities().values())
 	    	{
 				Entity oneEntity = (Entity) oneObject;
 	 			if(!"Entity".equals(oneEntity.getStereotype()))
 	 					continue;
-				String oneEntityLine = line.replace("@eachEntity@", oneEntity.getName());
-				content += oneEntityLine + "\n";
+	 			String oneEntityLine =  ioUtil.replaceF(line,"eachEntity", oneEntity.getName());
+ 				content += oneEntityLine + "\n";
 	    	}
 			return content;
 		}
-		else if(line.contains("@eachContract@"))
+		else if(ioUtil.containF(line, "eachContract"))
 		{
 			for(Object oneObject:pack.getEntities().values())
 	    	{
 				Entity oneEntity = (Entity) oneObject;
 	 			if(!"Contract".equals(oneEntity.getStereotype()))
 	 					continue;
-				String oneEntityLine = line.replace("@eachContract@", oneEntity.getName());
+	 			String oneEntityLine =  ioUtil.replaceF(line,"eachContract", oneEntity.getName());
+ 				
 				content += oneEntityLine + "\n";
 	    	}
 			return content;

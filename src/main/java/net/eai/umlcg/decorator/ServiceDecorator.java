@@ -103,16 +103,15 @@ public class ServiceDecorator {
 			{ 	
 				List<OperationParameter> paras = op.getParameters(); 
 
+				//generate request contract
+				Entity contract = new Entity();
+				contract.setName(ioUtil.capFirstLetter(op.getName()) + "Request");
+				contract.set_parent(new StarUmlReference(pack.get_id()));
+				contract.setStereotype("Contract");
+				pack.getOwnedElements().add(contract);
+				contracts.put(contract.getName(),contract);
 				if(paras != null)
 				{
-					//generate request contract
-					Entity contract = new Entity();
-					contract.setName(ioUtil.capFirstLetter(op.getName()) + "Request");
-					contract.set_parent(new StarUmlReference(pack.get_id()));
-					contract.setStereotype("Contract");
-					pack.getOwnedElements().add(contract);
-					contracts.put(contract.getName(),contract);
-
 					for(OperationParameter onePara : paras)
 					{
 						if(!onePara.getDirection().equals("return"))
@@ -124,7 +123,6 @@ public class ServiceDecorator {
 					}
 				}
 			}
-
 		}
 
 		//check if every method has responseDto

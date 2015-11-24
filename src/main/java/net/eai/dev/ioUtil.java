@@ -13,6 +13,14 @@ import java.util.Map.Entry;
 import net.eai.umlmodel.Entity;
 
 public class ioUtil {
+	
+	static boolean force = true;
+	
+	static public void setForce(boolean b)
+	{
+		force = b;
+	}
+	
 	static public void writeFile(String filename,String data)
 	{
 		File file = new File(filename);  
@@ -24,6 +32,9 @@ public class ioUtil {
 				parent.mkdirs();
 			}
 			
+			if(file.exists() && force == false)
+				return;
+				
 			BufferedWriter writer = new BufferedWriter(new FileWriter(file));    
 			writer.write(data);			
 		    writer.close();
@@ -74,17 +85,28 @@ public class ioUtil {
 			            Entry<String, String> entry = entityIter.next();
 	
 			            String token = entry.getKey();
-			            String value = entry.getValue();		            
+			            String value = entry.getValue();	
+			            
+			            if(value == null)
+			            	continue;
 	
-						line = line.replace("@" + token + "@", value);
-						line = line.replace("@^" + token + "@", 
-								value.toUpperCase().substring(0, 1) + value.substring(1,value.length()));					
+						line = line.replace("@" + token + "@", value);				
 						line = line.replace("@^^" + token + "@", 
 								value.toUpperCase());
 						line = line.replace("@.." + token + "@", 
 								value.toLowerCase());
-						line = line.replace("@." + token + "@", 
-								 value.toLowerCase().substring(0, 1) + value.substring(1,value.length()));
+						if(!"".equals(value))
+						{
+							line = line.replace("@^" + token + "@", 
+									value.toUpperCase().substring(0, 1) + value.substring(1,value.length()));	
+							line = line.replace("@." + token + "@", 
+									 value.toLowerCase().substring(0, 1) + value.substring(1,value.length()));
+						}
+						else
+						{
+							line = line.replace("@^" + token + "@", "");	
+							line = line.replace("@." + token + "@", "");
+						}
 						
 			        }
 					content += line + "\r\n"; 

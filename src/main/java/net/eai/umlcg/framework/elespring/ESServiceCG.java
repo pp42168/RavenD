@@ -14,6 +14,11 @@ import net.eai.umlmodel.DEVPackage;
 import net.eai.umlmodel.Entity;
 import net.eai.umlmodel.EntityAttribute;
 import net.eai.umlmodel.EntityOperation;
+import net.eai.umlmodel.StarUmlObjectContainer;
+import net.eai.umlmodel.UMLCollaboration;
+import net.eai.umlmodel.UMLInteraction;
+import net.eai.umlmodel.UMLMessage;
+import net.eai.umlmodel.UMLParticipant;
 
 public class ESServiceCG implements EntityCG{
 
@@ -28,10 +33,10 @@ public class ESServiceCG implements EntityCG{
 		m_targetPath = targetPath;
 		m_packCG = packCG;
 	}
-	
+
 	@Override
 	public String genCode(Entity entityObj) {
-		
+
 
 		String code = "";
 
@@ -41,18 +46,103 @@ public class ESServiceCG implements EntityCG{
 
 			tokens.put("op", op.getName());
 			tokens.put("mock", genServiceMoking(op));
-			
+			tokens.put("flow", genOperationCode(op));
+
+
 			code += ioUtil.fillTemplate(m_templatePath + "/ServiceImpl.java", tokens);
 		}
 
 		return code;
 	}
-	
+
+
+	@SuppressWarnings("rawtypes")
+	private String genOperationCode(EntityOperation operation)
+	{
+		String code = "";
+
+		if(operation.getOwnedElements() == null)
+			return code;
+		for(UMLCollaboration col : operation.getOwnedElements())
+		{ 	    			
+
+			if(col.getOwnedElements() == null)
+				continue;
+			for(UMLInteraction interaction : col.getOwnedElements())
+			{	
+				if(interaction.getMessages() == null)
+					continue;
+				for(UMLMessage msg : interaction.getMessages())
+				{
+					String assign = "";
+					String source = "";
+					String target = "";
+					String call = "";
+
+					//assignment target
+					if(msg.getAssignmentTarget() !=null && !"".equals(msg.getAssignmentTarget()))
+						assign =  msg.getAssignmentTarget() + " = " ;
+
+
+					//call function scope
+					String ref = "";
+					if(msg.getSource() != null){
+						ref = msg.getSource().get$ref();						
+						UMLParticipant part = (UMLParticipant) StarUmlObjectContainer.getObject(ref);
+						source = part.getName();
+					}
+
+					if(source.equals("this"))
+					{
+						if(msg.getTarget() != null)
+						{
+							ref = msg.getTarget().get$ref();
+							UMLParticipant targetPart = (UMLParticipant) StarUmlObjectContainer.getObject(ref);
+							target = targetPart.getName();
+
+							if("static".equals(target) || "".equals(target))
+							{
+								String targetTypeRef = targetPart.getRepresent().get$ref();
+								EntityAttribute represent = (EntityAttribute) StarUmlObjectContainer.getObject(targetTypeRef);
+								target = represent.getTypeStr();				
+							}	
+
+							if("this".equals(target))
+								target = "";
+							else
+								target += ".";
+						}
+						//call
+						if(msg.getSignature() != null)
+						{
+							ref = msg.getSignature().get$ref();
+							EntityOperation operationToCall = (EntityOperation) StarUmlObjectContainer.getObject(ref);				
+							call = operationToCall.getName();
+
+						}
+						//call argument
+						String argument = "";
+						if(msg.getArguments() != null)
+							argument = msg.getArguments();
+
+						code += "\r\n\t\t" + assign + target + call + "(" + argument + ");\r\n";
+
+					}
+					else
+						code += "\r\n\t\t//" + msg.getName() + "\r\n";
+
+
+				}				
+			}
+		}
+
+		return code;
+	}
 
 	private String genServiceMoking(EntityOperation op)
 	{
 		String responseContractName = ioUtil.replaceF("@^t@", "t", op.getName()) + "Response";
-		
+
 		String code = "\r\n\t\t\t" + responseContractName + "Dto responseDto = new " +  responseContractName + "Dto();\r\n";
 		Entity e = findContract(m_packCG.getPackage(),responseContractName);
 		if(e != null)
@@ -61,7 +151,7 @@ public class ESServiceCG implements EntityCG{
 			{
 				String setter = "set" + ioUtil.replaceF("@^t@", "t", att.getName());
 				code += "\t\t\tresponseDto." + setter  + "(";
-				
+
 				String attType = att.getTypeStr();
 				if(att.getDefaultValue() != null)
 				{
@@ -86,7 +176,7 @@ public class ESServiceCG implements EntityCG{
 				{
 					code += "new Date()";
 				}
-				
+
 				code += ");\r\n";
 			}
 		}
@@ -97,7 +187,7 @@ public class ESServiceCG implements EntityCG{
 	@Override
 	public void setTargetPath(String targetPath) {
 		// TODO Auto-generated method stub
-		
+
 	}
 
 	@Override
@@ -118,8 +208,8 @@ public class ESServiceCG implements EntityCG{
 		return "ESServiceCG";
 	}
 
-	
-	
+
+
 
 	private Entity findContract(DEVPackage pack,String name)
 	{
