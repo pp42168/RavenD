@@ -143,7 +143,7 @@ public class ESServiceCG implements EntityCG{
 	{
 		String responseContractName = ioUtil.replaceF("@^t@", "t", op.getName()) + "Response";
 
-		String code = "\r\n\t\t\t" + responseContractName + "Dto response = new " +  responseContractName + "Dto();\r\n";
+		String code = "\r\n\t\t\t" + responseContractName + " response = new " +  responseContractName + "();\r\n";
 		Entity e = findContract(m_packCG.getPackage(),responseContractName);
 		if(e != null)
 		{
