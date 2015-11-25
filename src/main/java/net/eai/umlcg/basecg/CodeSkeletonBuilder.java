@@ -346,7 +346,7 @@ public class CodeSkeletonBuilder {
 						{
 							if(ioUtil.containF(line, "eachDependPack"))
 							{
-								List<DEVPackage> packs = pack.getDependPacks();
+								List<DEVPackage> packs = (List<DEVPackage>) pack.getDependPacks();
 								for(DEVPackage dependPack:packs)
 								{
 									String oneLine =  ioUtil.replaceF(line, "eachDependPack", dependPack.getName());

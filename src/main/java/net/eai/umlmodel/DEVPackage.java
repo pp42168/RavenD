@@ -14,8 +14,7 @@ import java.util.Map.Entry;
 public class DEVPackage<T> {
     private HashMap<String, Entity> entities = new HashMap<String, Entity>();
     private HashMap<String, Entity> filters = new HashMap<String, Entity>();
-    private ArrayList<DEVPackage> dependPacks = new ArrayList<DEVPackage>();
-    
+    private HashMap<String, DEVPackage> dependPacks = new HashMap<String, DEVPackage>();
     
     
     public DEVPackage() {
@@ -192,7 +191,11 @@ public class DEVPackage<T> {
             Entry<String, Entity> entry = depends.next();
             Entity entity = entry.getValue();
             entity.scanDepends();
-            dependPacks.addAll(entity.getDependPacks());
+            for(DEVPackage pack:entity.getDependPacks())
+            {
+            		dependPacks.put(name, pack);
+            		
+            }
         }
         
         //collect pack dependency
@@ -343,11 +346,24 @@ public class DEVPackage<T> {
 		this.stereotype = stereotype;
 	}
 
-	public ArrayList<DEVPackage> getDependPacks() {
-		return dependPacks;
+	public List<DEVPackage> getDependPacks() {
+		List<DEVPackage> list = new LinkedList<DEVPackage>();
+		
+
+        Iterator<Entry<String, DEVPackage>> packIter = dependPacks.entrySet().iterator();
+
+        while (packIter.hasNext()) {
+            Entry<String, DEVPackage> entry = packIter.next();
+            DEVPackage pack = entry.getValue();
+            list.add(pack);
+        }
+
+        
+        
+		return list;
 	}
 
-	public void setDependPacks(ArrayList<DEVPackage> dependPacks) {
+	public void setDependPacks(HashMap<String, DEVPackage> dependPacks) {
 		this.dependPacks = dependPacks;
 	}
 }

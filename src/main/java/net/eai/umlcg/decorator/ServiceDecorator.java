@@ -12,6 +12,7 @@ import com.google.gson.Gson;
 
 import net.eai.dev.ioUtil;
 import net.eai.umlmodel.DEVPackage;
+import net.eai.umlmodel.DEVProject;
 import net.eai.umlmodel.Entity;
 import net.eai.umlmodel.EntityAttribute;
 import net.eai.umlmodel.EntityOperation;
@@ -45,10 +46,24 @@ public class ServiceDecorator {
 		contracts.put(contract.getName(),contract);
 	}
 
-	public DEVPackage genApiPack()
+	public void genApiPack(DEVProject devProject)
 	{
-		DEVPackage apiPack = new DEVPackage();
-		apiPack.setName(pack.getName());
+
+		DEVPackage apiPack  = null;
+		for(DEVPackage pack: devProject.getApiPacks())
+		{
+			if(pack.getName() == pack.getName())
+				apiPack = pack;
+		}
+		
+		if(apiPack == null)
+		{
+			apiPack = new DEVPackage();
+			apiPack.setName(pack.getName());
+			
+			devProject.addWebApi(apiPack);
+		}
+		
 		
 		Iterator<Entry<String, Entity>> entityIter = pack.getEntities().entrySet().iterator();
 
@@ -57,6 +72,9 @@ public class ServiceDecorator {
 			Entity service = entry.getValue();
 
 			if(service.getStereotype() ==null || !service.getStereotype().equals("Service"))
+				continue;
+			
+			if(apiPack.getEntities().containsKey(service.getName()))
 				continue;
 
 			Entity apiEntity = new Entity();
@@ -75,8 +93,6 @@ public class ServiceDecorator {
 			
 		}
 
-
-		return apiPack;
 	}
 
 	public void addContract()

@@ -222,7 +222,7 @@ public class ESServiceCG implements EntityCG{
 				return entity;
 		}
 
-		ArrayList<DEVPackage> depends = pack.getDependPacks();
+		List<DEVPackage> depends = pack.getDependPacks();
 		for(DEVPackage depPack:depends)
 		{
 			Entity res =  findContract(depPack,name);

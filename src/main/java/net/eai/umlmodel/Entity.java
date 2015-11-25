@@ -149,6 +149,9 @@ public class Entity {
 	
 	public void addDepend(String name,Entity entity)
 	{
+		if(depends.containsKey(name))
+			return;
+		
 		depends.put(name,entity);
 		UMLDependency umldepend = new UMLDependency();
 		umldepend.set_parent(new StarUmlReference(this._id));

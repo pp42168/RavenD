@@ -49,6 +49,7 @@ hs_err_pid*
 *.project
 logback.xml
 .settings/*
+/packaging/*
 
 #idea
 .idea/
