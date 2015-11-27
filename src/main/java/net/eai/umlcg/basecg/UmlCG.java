@@ -1,6 +1,7 @@
 package net.eai.umlcg.basecg;
 
 import java.io.File;
+import java.io.IOException;
 
 import net.eai.dev.ToolMeta;
 import net.eai.dev.UmlException;
@@ -18,7 +19,8 @@ public class UmlCG {
 
 	public UmlCG()
 	{
-		templatePath = "eleSpringTemplate";
+		templatePath = ":jar";//"eleSpringTemplate";
+		//templatePath = "eleSpringTemplate";
 		es = new ESServiceFramework("",templatePath);	
 	}
 
@@ -36,21 +38,32 @@ public class UmlCG {
 
 		File file = new File(templatePath);
 		//判断文件夹是否存在,如果不存在则创建文件夹
-		if (!file.exists()) {
+		if (!file.exists() && !":jar".equals(templatePath)) {
 			throw new UmlException("template error","template path " + templatePath + " doesn't exist");			
 		}
 
 		project.setProjectPath(target);
 
-		skeleton = new CodeSkeletonBuilder(
-				target,
-				templatePath + "/projectSkeleton",
-				project
-				);
+		try {
+			
+			
+			skeleton = new CodeSkeletonBuilder(
+					target,
+					templatePath,// + "/projectSkeleton",
+					project
+					);
+			
 
-		skeleton.setFramework(es);		
-		skeleton.setM_orgPath(orgPath);
-		skeleton.genCodeSkeleton();		
+
+			skeleton.setFramework(es);		
+			skeleton.setM_orgPath(orgPath);
+			skeleton.genCodeSkeleton();		
+			
+			
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 
 		return "done";
 	}

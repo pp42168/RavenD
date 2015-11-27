@@ -49,7 +49,11 @@ hs_err_pid*
 *.project
 logback.xml
 .settings/*
-/packaging/*
+packaging/*
 
 #idea
 .idea/
+
+
+#templates
+templates

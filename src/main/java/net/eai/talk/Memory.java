@@ -11,6 +11,7 @@ public class Memory {
 
 	private LinkedHashMap<String,List<Word> > concepts;
 	private LinkedList<Scenario> senarios = new LinkedList<Scenario>();
+	private LinkedHashMap<String,Object> status;
 	
 	Memory()
 	{
@@ -58,6 +59,14 @@ public class Memory {
 	}
 	public void setSenarios(LinkedList<Scenario> senarios) {
 		this.senarios = senarios;
+	}
+
+	public LinkedHashMap<String,Object> getStatus() {
+		return status;
+	}
+
+	public void setStatus(LinkedHashMap<String,Object> status) {
+		this.status = status;
 	}
 	
 	

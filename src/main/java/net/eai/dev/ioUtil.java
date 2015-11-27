@@ -13,83 +13,143 @@ import java.util.Map.Entry;
 import net.eai.umlmodel.Entity;
 
 public class ioUtil {
-	
+
 	static boolean force = true;
-	
+
 	static public void setForce(boolean b)
 	{
 		force = b;
 	}
-	
+
+	static public void tagJarPath(String path)
+	{	
+		File root = new File(path);  
+		File[] files = root.listFiles();
+		String content = "";
+
+
+		if(files != null)
+		{
+			for(File file:files){   
+				//process with directories
+				if(file.isDirectory()){
+					content += file.getName() + "/\n";
+					tagJarPath(path + "/" + file.getName());
+				}
+				// process with files
+				else{	
+					if(!file.getName().contains(".DS_Store") &&
+							!file.getName().contains(".jarpathtag"))
+						content += file.getName() + "\n";
+				}
+			}
+		}	    
+		writeFile(path + "/.jarpathtag",content);
+	}
+
+	static public void deleteFile(String filename)
+	{
+		File root = new File(filename); 
+		if(!root.isDirectory())
+			root.delete();
+		else
+		{
+			deleteFile(root);
+		}
+	}
+	static public void deleteFile(File root)
+	{
+		if(!root.isDirectory())
+			root.delete();
+		else
+		{
+			File[] files = root.listFiles();
+			if(files != null)
+			{
+				for(File file:files){     
+					if(file.isDirectory()){
+						deleteFile(file);
+					}
+					else
+					{
+						file.delete();
+					}
+				}
+			}
+			
+			root.delete();
+		}	   
+	}
+
 	static public void writeFile(String filename,String data)
 	{
 		File file = new File(filename);  
-	
+
 		try {	
-			
+
 			File parent = file.getParentFile();
 			if(parent!=null&&!parent.exists()){
 				parent.mkdirs();
 			}
-			
+
 			if(file.exists() && force == false)
 				return;
-				
+
 			BufferedWriter writer = new BufferedWriter(new FileWriter(file));    
 			writer.write(data);			
-		    writer.close();
+			writer.close();
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}		
 	}
-	
+
 	static public void writeFileWithExistCode(String filename,String data)
 	{
 		LinkedHashMap<String,String> keptCode = getManualCode(filename);
 		Iterator<Entry<String, String>> entityIter = keptCode.entrySet().iterator();
 		while (entityIter.hasNext()) {
 			Entry<String, String> entry =  entityIter.next();      
-			
-    		String key = entry.getKey();
-    		String val = entry.getValue();
 
-    		if(key.startsWith("%pre_"))
-    			data = data.replace("//business logic - " + key.substring(5), 
-    					"//business logic - " + key.substring(5) + val);
-    		else
-    			data = data.replace("//wrap up - " + key.substring(5),
-    					"//wrap up - " + key.substring(5) + val);    		
+			String key = entry.getKey();
+			String val = entry.getValue();
+
+			if(key.startsWith("%pre_"))
+				data = data.replace("//business logic - " + key.substring(5), 
+						"//business logic - " + key.substring(5) + val);
+			else
+				data = data.replace("//wrap up - " + key.substring(5),
+						"//wrap up - " + key.substring(5) + val);    		
 		}
-		
+
 		writeFile(filename, data);
-		
+
 	}
-	
+
 	static public String fillTemplate(String fileName,LinkedHashMap<String,String> tokens)
 	{
 		File file = new File(fileName);   		
-	    String content = "";
+		String content = "";
 
 		if(file.exists())
 		{
 			try {
 				String line;
-			    BufferedReader reader = new BufferedReader(new FileReader(file));  
+				BufferedReader reader = new BufferedReader(new FileReader(file));  
 				line = reader.readLine();				
 
-				
+
 				while(line !=null){  
-			        Iterator<Entry<String, String>> entityIter = tokens.entrySet().iterator();
-			        while (entityIter.hasNext()) {
-			            Entry<String, String> entry = entityIter.next();
-	
-			            String token = entry.getKey();
-			            String value = entry.getValue();	
-			            
-			            if(value == null)
-			            	continue;
-	
+					Iterator<Entry<String, String>> entityIter = tokens.entrySet().iterator();
+					while (entityIter.hasNext()) {
+						Entry<String, String> entry = entityIter.next();
+
+						String token = entry.getKey();
+						String value = entry.getValue();	
+
+						if(value == null)
+							continue;
+
 						line = line.replace("@" + token + "@", value);				
 						line = line.replace("@^^" + token + "@", 
 								value.toUpperCase());
@@ -100,44 +160,44 @@ public class ioUtil {
 							line = line.replace("@^" + token + "@", 
 									value.toUpperCase().substring(0, 1) + value.substring(1,value.length()));	
 							line = line.replace("@." + token + "@", 
-									 value.toLowerCase().substring(0, 1) + value.substring(1,value.length()));
+									value.toLowerCase().substring(0, 1) + value.substring(1,value.length()));
 						}
 						else
 						{
 							line = line.replace("@^" + token + "@", "");	
 							line = line.replace("@." + token + "@", "");
 						}
-						
-			        }
+
+					}
 					content += line + "\r\n"; 
 					line = reader.readLine();
-			    }  
-			    reader.close();
+				}  
+				reader.close();
 			} catch (IOException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
-			
+
 		}
-		
+
 		return content;
-		
-		
+
+
 	}
-	
-	
-	
+
+
+
 	static public String replaceF(String line,String token,String value)
 	{
 		if(value == null)
 			return line;
-		
-		
+
+
 		line = line.replace("@" + token + "@", value);
 
 		line = line.replace("@^" + token + "@", 
 				value.toUpperCase().substring(0, 1) + value.substring(1,value.length()));
-		
+
 		line = line.replace("@^^" + token + "@", 
 				value.toUpperCase());
 
@@ -145,11 +205,11 @@ public class ioUtil {
 				value.toLowerCase());
 
 		line = line.replace("@." + token + "@", 
-				 value.toLowerCase().substring(0, 1) + value.substring(1,value.length()));
-		
+				value.toLowerCase().substring(0, 1) + value.substring(1,value.length()));
+
 
 		line = line.replace("@." + token + "@", 
-				 value.toLowerCase().substring(0, 1) + value.substring(1,value.length()));
+				value.toLowerCase().substring(0, 1) + value.substring(1,value.length()));
 
 		line = line.replace("@_^" + token + "@", 
 				convertAttSpellToColumnSpell(value).toUpperCase());
@@ -158,18 +218,21 @@ public class ioUtil {
 				convertAttSpellToColumnSpell(value));
 		line = line.replace("@_" + token + "@", 
 				convertAttSpellToColumnSpell(value));
-		
+
 		line = line.replace("@~" + token + "@", 
 				convertColumnSpeelToAttSpell(value));
-			
+
 		return line;
 	}
-	
+
 	static public String capFirstLetter(String value)
 	{
 		return value.toUpperCase().substring(0, 1) + value.substring(1,value.length());
 	}
-	
+
+
+
+
 	static public boolean containF(String line,String token)
 	{
 		if(line.contains("@" + token + "@"))
@@ -188,61 +251,61 @@ public class ioUtil {
 			return true;
 		else if(line.contains("@~" + token + "@"))
 			return true;
-		
+
 		return false;
 	}
-	
-	
+
+
 	static public String readFile(String filename)
 	{
 		File file = new File(filename);   
-		
-	    String content = "";
+
+		String content = "";
 
 		if(file.exists())
 		{
 			try {
 				String line;
-			    BufferedReader reader = new BufferedReader(new FileReader(file));  
+				BufferedReader reader = new BufferedReader(new FileReader(file));  
 				line = reader.readLine();
-				
+
 				while(line !=null){  
 					content += line + "\r\n"; 
 					line = reader.readLine();
-			    }  
-			    reader.close();
+				}  
+				reader.close();
 			} catch (IOException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
-			
+
 		}
-		
+
 		return content;
 
 	}
-	
-	
+
+
 
 	public static void writeSectionCode(String filename,String sectionStart,String sectionEnd,String content)
 	{
 		String fileData = readFile(filename);
 		int startInd = fileData.indexOf(sectionStart);
 		int endInd = fileData.indexOf(sectionEnd,startInd);
-		
+
 		if(startInd == -1)
 			return ;
-		
+
 		String output = fileData.substring(0,startInd) + sectionStart;
-		
+
 		output += content + sectionEnd;
-		
+
 		output += fileData.substring(endInd + sectionEnd.length());
-		
+
 		writeFile(filename,output);
-		
+
 	}
-	
+
 	public static String convertColumnSpeelToAttSpell(String att)
 	{
 		String columnName = "";
@@ -259,10 +322,10 @@ public class ioUtil {
 			else 
 				columnName += att.charAt(i);
 		}
-		
+
 		return columnName;
 	}
-	
+
 	public static String convertAttSpellToColumnSpell(String att)
 	{
 		String columnName = "";
@@ -275,35 +338,35 @@ public class ioUtil {
 				columnName += ch;
 		}
 		columnName = columnName.toLowerCase();
-		
+
 		return columnName;
-		
+
 	}
-	
-	
-	
+
+
+
 	public static void genPathWithTemplate(String templatePath,String targetPath,String prjName)
 	{
 		File root = new File(templatePath);  
-	    File[] files = root.listFiles();
-	    if(files != null)
-	    {
-	    	 for(File file:files){     
-	 	    	if(file.isDirectory()){
-	 	    		int parentPathLength = templatePath.length();
-	 	    		String tempPath = file.getPath().substring(parentPathLength);
-	 	    		tempPath = tempPath.replace("@prj@", prjName);
-	 	    		genPathWithTemplate(file.getPath(),targetPath  + tempPath,prjName);
-	 	    	}
-	 	    	else
-	 	    	{
-	 	    		String fileData = readFile(file.getAbsolutePath());
-	 	    		fileData = fileData.replace("@prj@", prjName);
-	 	    		String targetFileName = file.getName().replace("@prj@", prjName);
-	 	    		writeFile(targetPath + "/" + targetFileName,fileData);
-	 	    	}
-	 	    }
-	    }
+		File[] files = root.listFiles();
+		if(files != null)
+		{
+			for(File file:files){     
+				if(file.isDirectory()){
+					int parentPathLength = templatePath.length();
+					String tempPath = file.getPath().substring(parentPathLength);
+					tempPath = tempPath.replace("@prj@", prjName);
+					genPathWithTemplate(file.getPath(),targetPath  + tempPath,prjName);
+				}
+				else
+				{
+					String fileData = readFile(file.getAbsolutePath());
+					fileData = fileData.replace("@prj@", prjName);
+					String targetFileName = file.getName().replace("@prj@", prjName);
+					writeFile(targetPath + "/" + targetFileName,fileData);
+				}
+			}
+		}
 	}
 
 	private static LinkedHashMap<String,String> getManualCode(String filename)
@@ -316,7 +379,7 @@ public class ioUtil {
 
 		int startPreLength = "//business logic - ".length();
 		int startAfterLength = "//wrap up - ".length();
-		
+
 		while(preCodeStart != -1)
 		{
 			int opNameEndInd = fileData.indexOf("\r\n", preCodeStart);
@@ -327,28 +390,28 @@ public class ioUtil {
 			{
 				codeEnd = fileData.indexOf("\r\n\t\t\t//logic ends",opNameEndInd);				
 			}
-			
+
 			String code = fileData.substring(opNameEndInd,codeEnd);
 			codes.put("%pre_" + opName,code);
-			
+
 			preCodeStart = fileData.indexOf("//business logic - ",codeEnd);
 		}
-		
+
 		while(afterCodeStart != -1)
 		{
 			int opNameEndInd = fileData.indexOf("\r\n", afterCodeStart);
 			String opName = fileData.substring(afterCodeStart + startAfterLength,
 					opNameEndInd );
 			codeEnd = fileData.indexOf("\r\n\t\t//logic ends",opNameEndInd);
-			
+
 			String code = fileData.substring(opNameEndInd,codeEnd);
 			codes.put("%aft_" + opName,code);
 
 			afterCodeStart = fileData.indexOf("//wrap up - ",codeEnd);
 		}
-		
-		
-		
+
+
+
 		return codes;
 	}
 

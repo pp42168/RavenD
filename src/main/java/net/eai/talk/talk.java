@@ -1,11 +1,13 @@
 	package net.eai.talk;
 
 import java.io.BufferedInputStream;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.LinkedHashMap;
 import java.util.Scanner;
 
 import net.eai.dev.DataMapper;
+import net.eai.dev.JarUtil;
 import net.eai.dev.JsonClassGen;
 import net.eai.dev.UmlException;
 import net.eai.dev.ioUtil;
@@ -14,15 +16,22 @@ import net.eai.umlcg.framework.elespring.ESServiceFramework;
 import net.eai.umlmodel.DEVProject;
 
 public class talk {
-	public static void main(String[] args) {
+	public static void main(String[] args) throws IOException {
+
+		//ioUtil.writeFile("fse/fs/fsef/fds", "ff");
 		
+		//JarUtil u = new JarUtil();
+		//u.tagJarPath("pack/eleSpringTemplate");
+		//FileUtil.readJarPath("eleSpringTemplate");
+		//u.readJarPath("eleSpringTemplate");
+		//ioUtil.deleteFile("fse");
 		
-	//	Listener listener = new Listener();		
-	//	listener.listenCommand();
-			UmlCG cg = new UmlCG();
+		Listener listener = new Listener();		
+		listener.listenCommand();
+		UmlCG cg = new UmlCG();
 		
 		try {
-			cg.gen("sso.mdj", "../jj");
+			cg.gen("example.mdj", "j");
 		} catch (UmlException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();

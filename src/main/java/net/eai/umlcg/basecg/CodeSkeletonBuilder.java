@@ -11,6 +11,7 @@ import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map.Entry;
 
+import net.eai.dev.JarUtil;
 import net.eai.dev.ioUtil;
 import net.eai.umlmodel.DEVPackage;
 import net.eai.umlmodel.DEVProject;
@@ -27,9 +28,10 @@ public class CodeSkeletonBuilder {
 	private LinkedHashMap<String,String> touchList = new LinkedHashMap<String,String>();
 	private List<String> filters = new ArrayList<String>();
 	private String m_orgPath = "me.ele";
+	private boolean tempInJar = false;
 	
 	
-	public CodeSkeletonBuilder(String targetPath,String templatePath,DEVProject prj)
+	public CodeSkeletonBuilder(String targetPath,String templatePath,DEVProject prj) 
 	{
 		m_project = prj;
 		m_targetPath = targetPath;
@@ -55,10 +57,22 @@ public class CodeSkeletonBuilder {
 	}
 	
 	
-	public void genCodeSkeleton()
+	public void genCodeSkeleton() throws IOException
 	{
+		File temp = new File(m_templatePath);
+		if(":jar".equals(m_templatePath))
+		{
+			JarUtil j = new JarUtil();
+			j.copyFromJarPath("/eleSpringTemplate", ".cgtemp");
+			m_templatePath = ".cgtemp";
+		}
+		
+		
 		copyPathWithTemplate(m_templatePath,m_targetPath,
 				null,null);
+		
+		ioUtil.deleteFile(".cgtemp");
+		
 	}
 	
 	private boolean pathFiltered(String path)
