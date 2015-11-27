@@ -3,8 +3,10 @@ package net.eai.umlcg.basecg;
 import java.io.File;
 import java.io.IOException;
 
+import net.eai.dev.JarUtil;
 import net.eai.dev.ToolMeta;
 import net.eai.dev.UmlException;
+import net.eai.dev.ioUtil;
 import net.eai.umlcg.framework.elespring.ESServiceFramework;
 import net.eai.umlmodel.DEVProject;
 
@@ -16,6 +18,7 @@ public class UmlCG {
 	private String templatePath = null;
 	private String orgPath = "me.ele";
 
+	
 
 	public UmlCG()
 	{
@@ -45,20 +48,32 @@ public class UmlCG {
 		project.setProjectPath(target);
 
 		try {
+
+			boolean isJar = false;
+			String tempp = templatePath;
+			if(":jar".equals(tempp))
+			{
+				JarUtil j = new JarUtil();
+				j.copyFromJarPath("/eleSpringTemplate", ".jartemp");
+				tempp = ".jartemp";
+				isJar = true;
+			}
 			
 			
 			skeleton = new CodeSkeletonBuilder(
 					target,
-					templatePath,// + "/projectSkeleton",
+					tempp + "/projectSkeleton",
 					project
 					);
 			
-
-
 			skeleton.setFramework(es);		
 			skeleton.setM_orgPath(orgPath);
 			skeleton.genCodeSkeleton();		
 			
+
+			if(isJar)
+				ioUtil.deleteFile(".jartemp");
+
 			
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
@@ -66,6 +81,16 @@ public class UmlCG {
 		}
 
 		return "done";
+	}
+
+
+	public String getTemplatePath() {
+		return templatePath;
+	}
+
+
+	public void setTemplatePath(String templaftePath) {
+		this.templatePath = templaftePath;
 	}
 
 }

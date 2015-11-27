@@ -58,20 +58,9 @@ public class CodeSkeletonBuilder {
 	
 	
 	public void genCodeSkeleton() throws IOException
-	{
-		File temp = new File(m_templatePath);
-		if(":jar".equals(m_templatePath))
-		{
-			JarUtil j = new JarUtil();
-			j.copyFromJarPath("/eleSpringTemplate", ".cgtemp");
-			m_templatePath = ".cgtemp";
-		}
-		
-		
+	{	
 		copyPathWithTemplate(m_templatePath,m_targetPath,
 				null,null);
-		
-		ioUtil.deleteFile(".cgtemp");
 		
 	}
 	
@@ -107,7 +96,8 @@ public class CodeSkeletonBuilder {
 	 	    	// process with files
 	 	    	else{	
 	 	    		
-	 	    		if(!file.getName().contains(".DS_Store"))
+	 	    		if(!file.getName().contains(".DS_Store") &&
+	 	    				!file.getName().contains(".jarpathtag"))
 	 	    			processFile(file,pack,entity,targetPath);
 	 	    	}
 	 	    }

@@ -29,7 +29,7 @@ public class talk {
 		Listener listener = new Listener();		
 		listener.listenCommand();
 		UmlCG cg = new UmlCG();
-		
+		cg.setTemplatePath("templates/eleSpringTemplate");
 		try {
 			cg.gen("example.mdj", "j");
 		} catch (UmlException e) {
