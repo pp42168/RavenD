@@ -10,20 +10,15 @@
 			<dataSource type="POOLED">
 				<property name="driver" value="com.mysql.jdbc.Driver" />
 				<property name="url"
-					value="jdbc:mysql://118.244.235.185:3306/youthpms?useUnicode=true&amp;characterEncoding=utf8" />
+					value="jdbc:mysql://localhost:3306/karma?useUnicode=true&amp;characterEncoding=utf8" />
 				<property name="username" value="root" />
-				<property name="password" value="123456" />
+				<property name="password" value="" />
 				<property name="poolPingQuery" value="SELECT 1" />
 				<property name="poolPingEnabled" value="true" />
 			</dataSource>
 		</environment>
 	</environments>
-	<mappers>
-	
-		<mapper resource="net/eai/app/system/DataMapper.xml" />
-		<mapper resource="baseSetting/dictionary/DataMapper.xml" />
-		
-		<mapper resource="youth/pms/HrManage/DataMapper.xml"/>
-		<mapper resource="net/eai/util/SeqDataMapper.xml"/>
+	<mappers>	
+		<mapper resource="net/eai/dev/DataMapper.xml" />
 	</mappers>
 </configuration>

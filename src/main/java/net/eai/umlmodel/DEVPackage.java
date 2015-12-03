@@ -46,7 +46,10 @@ public class DEVPackage<T> {
     
     public void addEntity(String id, Entity entity) {
         entities.put(id, entity);
-        //	ownedElements.add((T) entity);
+      //  ownedElements.add((T) entity);
+        StarUmlReference ref = new StarUmlReference();
+        ref.set$ref(this.get_id());
+        entity.set_parent(ref);
     }
 
     public void exportUMLFragment(String path) {

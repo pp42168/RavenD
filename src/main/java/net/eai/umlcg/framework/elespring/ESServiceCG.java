@@ -149,12 +149,14 @@ public class ESServiceCG implements EntityCG{
 		{
 			for(EntityAttribute att:e.getAttributes())
 			{
-				String setter = "set" + ioUtil.replaceF("@^t@", "t", att.getName());
-				code += "\t\t\tresponse." + setter  + "(";
 
-				String attType = att.getTypeStr();
+				String attType = att.getTypeStr();				
+				String setter = "set" + ioUtil.replaceF("@^t@", "t", att.getName());
+				
+				
 				if(att.getDefaultValue() != null)
 				{
+					code += "\t\t\tresponse." + setter  + "(";
 					if(attType.equals("String"))
 						code += "\"" + att.getDefaultValue() + "\"";
 					else
@@ -162,20 +164,26 @@ public class ESServiceCG implements EntityCG{
 				}
 				else if(attType.equals("String"))
 				{
+					code += "\t\t\tresponse." + setter  + "(";
 					code += "\"" + att.getName() + "Value\"";
 				}
 				else if(attType.equals("int") || attType.equals("Integer") || attType.equals("long") || attType.equals("BigInteger"))
 				{
+					code += "\t\t\tresponse." + setter  + "(";
 					code += "1";
 				}
 				else if(attType.equals("double") || attType.equals("float")  || attType.equals("Double")  || attType.equals("BigDecimal") )
 				{
+					code += "\t\t\tresponse." + setter  + "(";
 					code += "12.34" ;
 				}
 				else if(attType.equals("Date"))
 				{
+					code += "\t\t\tresponse." + setter  + "(";
 					code += "new Date()";
 				}
+				else
+					continue;
 
 				code += ");\r\n";
 			}

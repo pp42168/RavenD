@@ -3,12 +3,17 @@ package net.eai.umlcg.basecg;
 import java.io.File;
 import java.io.IOException;
 
+import com.google.gson.Gson;
+
 import net.eai.dev.JarUtil;
 import net.eai.dev.ToolMeta;
 import net.eai.dev.UmlException;
 import net.eai.dev.ioUtil;
 import net.eai.umlcg.framework.elespring.ESServiceFramework;
+import net.eai.umlcg.scanner.EntityScanner;
+import net.eai.umlmodel.DEVPackage;
 import net.eai.umlmodel.DEVProject;
+import net.eai.umlmodel.Entity;
 
 public class UmlCG {
 
@@ -28,6 +33,32 @@ public class UmlCG {
 	}
 
 
+	//@ToolMeta(para = {"uml","target"})
+	public String importTable(String uml,String target) 
+	{
+
+		EntityScanner scanner = new EntityScanner();
+		DEVPackage p = scanner.scanDb();
+
+		Gson gson = new Gson();
+		return gson.toJson(p);
+	//	return "done";
+		
+	}
+	
+	//@ToolMeta(para = {"uml","target"})
+	public String importDbTables(String packName) 
+	{
+		EntityScanner scanner = new EntityScanner();
+		DEVPackage p = scanner.scanDb();
+		p.setName(packName);
+
+		Gson gson = new Gson();
+		return gson.toJson(p);
+		
+	}
+		
+		
 	@ToolMeta(para = {"uml","target"})
 	public String gen(String uml,String target) throws UmlException
 	{
@@ -48,14 +79,14 @@ public class UmlCG {
 		project.setProjectPath(target);
 
 		try {
-
 			boolean isJar = false;
 			String tempp = templatePath;
 			if(":jar".equals(tempp))
 			{
 				JarUtil j = new JarUtil();
-				j.copyFromJarPath("/eleSpringTemplate", ".jartemp");
-				tempp = ".jartemp";
+				j.copyFromJarPath("/eleSpringTemplate", "eleSpringTemplate");
+				tempp = "eleSpringTemplate";
+				es.setM_templatePath(tempp);
 				isJar = true;
 			}
 			
@@ -72,7 +103,7 @@ public class UmlCG {
 			
 
 			if(isJar)
-				ioUtil.deleteFile(".jartemp");
+				ioUtil.deleteFile("eleSpringTemplate");
 
 			
 		} catch (IOException e) {
@@ -91,6 +122,7 @@ public class UmlCG {
 
 	public void setTemplatePath(String templaftePath) {
 		this.templatePath = templaftePath;
+		es.setM_templatePath(templaftePath);
 	}
 
 }

@@ -29,23 +29,23 @@ public class CodeSkeletonBuilder {
 	private List<String> filters = new ArrayList<String>();
 	private String m_orgPath = "me.ele";
 	private boolean tempInJar = false;
-	
-	
+
+
 	public CodeSkeletonBuilder(String targetPath,String templatePath,DEVProject prj) 
 	{
 		m_project = prj;
 		m_targetPath = targetPath;
 		m_templatePath = templatePath;
 	}
-	
-	
+
+
 	//////////  generate project skeleton //////////////
 
 	public void addNoTouch(String path)
 	{
-			touchList.put(path, "notouch");
+		touchList.put(path, "notouch");
 	}
-	
+
 	public void addFilter(String path)
 	{
 		filters.add(path);
@@ -55,15 +55,15 @@ public class CodeSkeletonBuilder {
 	{
 		touchList.put(path, "dotouch");
 	}
-	
-	
+
+
 	public void genCodeSkeleton() throws IOException
 	{	
 		copyPathWithTemplate(m_templatePath,m_targetPath,
 				null,null);
-		
+
 	}
-	
+
 	private boolean pathFiltered(String path)
 	{
 		for(String oneFilter:filters)
@@ -78,199 +78,199 @@ public class CodeSkeletonBuilder {
 			DEVPackage pack,Entity entity)
 	{
 		File root = new File(templatePath);  
-	    File[] files = root.listFiles();
-	    if(files != null)
-	    {
-	    	 for(File file:files){   
-	    		 //process with directories
-	 	    	if(file.isDirectory()){
-	 	    		if(pathFiltered(targetPath))
-	 	    		{
-	 	    			System.out.print("\nignored file " + targetPath);
-	 	    		}
-	 	    		else
-	 	    		{
-		 	    		processDirectories(file,pack,entity,templatePath,targetPath);
-	 	    		}
-	 	    	}
-	 	    	// process with files
-	 	    	else{	
-	 	    		
-	 	    		if(!file.getName().contains(".DS_Store") &&
-	 	    				!file.getName().contains(".jarpathtag"))
-	 	    			processFile(file,pack,entity,targetPath);
-	 	    	}
-	 	    }
-	    }
+		File[] files = root.listFiles();
+		if(files != null)
+		{
+			for(File file:files){   
+				//process with directories
+				if(file.isDirectory()){
+					if(pathFiltered(targetPath))
+					{
+						System.out.print("\nignored file " + targetPath);
+					}
+					else
+					{
+						processDirectories(file,pack,entity,templatePath,targetPath);
+					}
+				}
+				// process with files
+				else{	
+
+					if(!file.getName().contains(".DS_Store") &&
+							!file.getName().contains(".jarpathtag"))
+						processFile(file,pack,entity,targetPath);
+				}
+			}
+		}
 	}
-	
+
 	private void processEachEntity(File file,DEVPackage pack,Entity entity,
 			String tempPath,String thisPath,String targetPath,String type)
 	{
 		if(ioUtil.containF(tempPath, "each" + type + "@"))
 		{
 			for(Object oneObject:pack.getEntities().values())
-		    {
+			{
 				Entity oneEntity = (Entity) oneObject;
 				if(!type.equals(oneEntity.getStereotype()))
 					continue;
-				
+
 				tempPath = ioUtil.replaceF(tempPath, "each" + type, oneEntity.getName());
-	 	   		copyPathWithTemplate(file.getPath(),targetPath  + thisPath,
-	 	    				pack,oneEntity);
-		    }
+				copyPathWithTemplate(file.getPath(),targetPath  + thisPath,
+						pack,oneEntity);
+			}
 		}
 		else
- 			copyPathWithTemplate(file.getPath(),targetPath  + thisPath,
- 					pack,entity);
-		
+			copyPathWithTemplate(file.getPath(),targetPath  + thisPath,
+					pack,entity);
+
 	}
-	
+
 	@SuppressWarnings("rawtypes") 	
 	private void processDirectories(File file,DEVPackage pack,Entity entity,String templatePath,String targetPath)
 	{
-		
- 		
- 			
-		int parentPathLength = templatePath.length();
- 		String tempPath = file.getPath().substring(parentPathLength);
- 		
- 			if(tempPath.startsWith("@CGele"))
- 				return;
 
- 			tempPath = ioUtil.replaceF(tempPath, "prj", m_project.getName());
- 			String orgDirPath = m_orgPath.replace(".", "/");
-	    	if(tempPath.contains("@orgPath@"))
-	    		tempPath = tempPath.replace("@orgPath@", orgDirPath);
-	    	if(pack != null)
-	    		tempPath = ioUtil.replaceF(tempPath, "pack",  pack.getName()) ;	    		
-	    	//	tempPath = tempPath.replace("@pack@", pack.getName());
-	    	
-	    	if(ioUtil.containF(tempPath,"eachPack"))
-	    	{
-	    		for(DEVPackage onePack:m_project.getPackages())
-	    		{
-	    			String thisPath = ioUtil.replaceF(tempPath, "eachPack", onePack.getName());
-    				processEachEntity(file,onePack,entity,tempPath,thisPath,targetPath,"Entity");
-    				processEachEntity(file,onePack,entity,tempPath,thisPath,targetPath,"Service");
-	    		}
-	    	}
-	    	else if(ioUtil.containF(tempPath, "eachApiPack"))
-	    	{
-	    		for(DEVPackage onePack:m_project.getApiPacks())
-	    		{
-	    			
-	    			String thisPath = ioUtil.replaceF(tempPath, "eachApiPack", onePack.getName());
-    				processEachEntity(file,onePack,entity,tempPath,thisPath,targetPath,"Api");
-	    		}
-	    	}
-	    	else
-	    	{
-	    		copyPathWithTemplate(file.getPath(),targetPath  + tempPath,
-	    				pack,entity);
-	    	}
- 		
+
+
+		int parentPathLength = templatePath.length();
+		String tempPath = file.getPath().substring(parentPathLength);
+
+		if(tempPath.startsWith("@CGele"))
+			return;
+
+		tempPath = ioUtil.replaceF(tempPath, "prj", m_project.getName());
+		String orgDirPath = m_orgPath.replace(".", "/");
+		if(tempPath.contains("@orgPath@"))
+			tempPath = tempPath.replace("@orgPath@", orgDirPath);
+		if(pack != null)
+			tempPath = ioUtil.replaceF(tempPath, "pack",  pack.getName()) ;	    		
+		//	tempPath = tempPath.replace("@pack@", pack.getName());
+
+		if(ioUtil.containF(tempPath,"eachPack"))
+		{
+			for(DEVPackage onePack:m_project.getPackages())
+			{
+				String thisPath = ioUtil.replaceF(tempPath, "eachPack", onePack.getName());
+				processEachEntity(file,onePack,entity,tempPath,thisPath,targetPath,"Entity");
+				processEachEntity(file,onePack,entity,tempPath,thisPath,targetPath,"Service");
+			}
+		}
+		else if(ioUtil.containF(tempPath, "eachApiPack"))
+		{
+			for(DEVPackage onePack:m_project.getApiPacks())
+			{
+
+				String thisPath = ioUtil.replaceF(tempPath, "eachApiPack", onePack.getName());
+				processEachEntity(file,onePack,entity,tempPath,thisPath,targetPath,"Api");
+			}
+		}
+		else
+		{
+			copyPathWithTemplate(file.getPath(),targetPath  + tempPath,
+					pack,entity);
+		}
+
 	}
-	
+
 	private boolean processEachFile(String eachType, File file,String targetFileName,DEVPackage pack,String targetPath)
 	{
-			
+
 		if(ioUtil.containF(targetFileName, "each" + eachType))
 		{
 			for(Object oneObject:pack.getEntities().values())
-	 	    {
-					Entity oneEntity = (Entity) oneObject;				
-					if(eachType.equals(oneEntity.getStereotype()))
-					{
-						String fileName = ioUtil.replaceF(targetFileName, "each" + eachType,  oneEntity.getName());
-		    			String fileData = genFileDataWithTemplate(file,pack,oneEntity);
-		 	    		ioUtil.writeFile(targetPath + "/" + fileName,fileData);
-					}
-	 	    }
+			{
+				Entity oneEntity = (Entity) oneObject;				
+				if(eachType.equals(oneEntity.getStereotype()))
+				{
+					String fileName = ioUtil.replaceF(targetFileName, "each" + eachType,  oneEntity.getName());
+					String fileData = genFileDataWithTemplate(file,pack,oneEntity);
+					ioUtil.writeFile(targetPath + "/" + fileName,fileData);
+				}
+			}
 		}
 		else
 			return false;
-		
+
 		return true;
 	}
-	
+
 	private void processFile(File file,DEVPackage pack,Entity entity,String targetPath)
 	{
 		String targetFileName = file.getName();
 
 		targetFileName = ioUtil.replaceF(targetFileName, "prj", m_project.getName());
-	    	if(pack != null)
-	    		targetFileName = ioUtil.replaceF(targetFileName,"pack", pack.getName());
-	    	
- 	 	if(ioUtil.containF(targetFileName, "eachPack"))
- 		{
- 			for(DEVPackage onePack:m_project.getPackages())
-	    		{
- 					String thisPackFileName = ioUtil.replaceF(targetFileName,"eachPack", onePack.getName());
+		if(pack != null)
+			targetFileName = ioUtil.replaceF(targetFileName,"pack", pack.getName());
 
-	 				boolean processed = false;
+		if(ioUtil.containF(targetFileName, "eachPack"))
+		{
+			for(DEVPackage onePack:m_project.getPackages())
+			{
+				String thisPackFileName = ioUtil.replaceF(targetFileName,"eachPack", onePack.getName());
 
-	 	 			processed = processed || processEachFile("Service", file, targetFileName, pack, targetPath);
-	 	 			processed = processed || processEachFile("Entity", file, targetFileName, pack, targetPath);
-	 	 			processed = processed || processEachFile("Contract", file, targetFileName, pack, targetPath);
-	 	 			
- 					if(!processed)
- 					{
- 						String fileData = genFileDataWithTemplate(file,onePack,entity);
-	    				if(!"".equals(fileData))
-	    					ioUtil.writeFile(targetPath + "/" + thisPackFileName,fileData);
- 					}
-	    		}
- 		}
- 		else if(ioUtil.containF(targetFileName, "eachApiPack"))
- 		{
- 			for(DEVPackage onePack:m_project.getPackages())
-	    		{ 				
-	 				String thisPackFileName = ioUtil.replaceF(targetFileName,"eachApiPack", onePack.getName());
-	 				if(!processEachFile("Api", file, thisPackFileName, onePack, targetPath))
- 					{
- 						String fileData = genFileDataWithTemplate(file,onePack,entity);
-	    				if(!"".equals(fileData))
-	    					ioUtil.writeFile(targetPath + "/" + thisPackFileName,fileData);
- 					}
-	    		}
- 		}
- 		else 
- 		{
- 			boolean processed = false;
- 			processed = processEachFile("Entity", file, targetFileName, pack, targetPath);
- 			processed = processed || processEachFile("Api", file, targetFileName, pack, targetPath);
- 			processed = processed || processEachFile("Service", file, targetFileName, pack, targetPath);
- 			processed = processed || processEachFile("Contract", file, targetFileName, pack, targetPath);
- 			processed = processed || processEachFile("Exception", file, targetFileName, pack, targetPath);
- 			
- 			if(!processed){
+				boolean processed = false;
 
- 	 			String fileData = genFileDataWithTemplate(file,pack,entity);
- 	 	    	ioUtil.writeFile(targetPath + "/" + targetFileName,fileData);
- 			}
- 		} 		
+				processed = processed || processEachFile("Service", file, targetFileName, pack, targetPath);
+				processed = processed || processEachFile("Entity", file, targetFileName, pack, targetPath);
+				processed = processed || processEachFile("Contract", file, targetFileName, pack, targetPath);
+
+				if(!processed)
+				{
+					String fileData = genFileDataWithTemplate(file,onePack,entity);
+					if(!"".equals(fileData))
+						ioUtil.writeFile(targetPath + "/" + thisPackFileName,fileData);
+				}
+			}
+		}
+		else if(ioUtil.containF(targetFileName, "eachApiPack"))
+		{
+			for(DEVPackage onePack:m_project.getPackages())
+			{ 				
+				String thisPackFileName = ioUtil.replaceF(targetFileName,"eachApiPack", onePack.getName());
+				if(!processEachFile("Api", file, thisPackFileName, onePack, targetPath))
+				{
+					String fileData = genFileDataWithTemplate(file,onePack,entity);
+					if(!"".equals(fileData))
+						ioUtil.writeFile(targetPath + "/" + thisPackFileName,fileData);
+				}
+			}
+		}
+		else 
+		{
+			boolean processed = false;
+			processed = processEachFile("Entity", file, targetFileName, pack, targetPath);
+			processed = processed || processEachFile("Api", file, targetFileName, pack, targetPath);
+			processed = processed || processEachFile("Service", file, targetFileName, pack, targetPath);
+			processed = processed || processEachFile("Contract", file, targetFileName, pack, targetPath);
+			processed = processed || processEachFile("Exception", file, targetFileName, pack, targetPath);
+
+			if(!processed){
+
+				String fileData = genFileDataWithTemplate(file,pack,entity);
+				ioUtil.writeFile(targetPath + "/" + targetFileName,fileData);
+			}
+		} 		
 	}
-	
+
 	private String getCGLines(String line,DEVPackage pack,Entity entity)
 	{
 		String prefix = line.substring(0,line.indexOf("#CG"));
 		line = line.substring(line.indexOf("#CG"));
-		
+
 		String commands[] = line.split(" ");
-	    ProjectCG pcg = framework.getProjectCG(m_project);
-	    String CGType = commands[1];
+		ProjectCG pcg = framework.getProjectCG(m_project);
+		String CGType = commands[1];
 		if(line.startsWith("#CG PackCG "))
 		{
 			PackageCG packCG = framework.getPackageCG(pcg, pack);
 			return packCG.genCode();
-			
+
 		}
 		else if(line.startsWith("#CG EntityCG "))
 		{
 			String entityCGType = commands[2];
-			
-			
+
+
 			PackageCG packCG = framework.getPackageCG(pcg, pack);
 			List<EntityCG> entityCGs = framework.getEntityCGs(packCG);
 			for(EntityCG cg:entityCGs)
@@ -281,46 +281,46 @@ public class CodeSkeletonBuilder {
 					{
 						String code = "";
 						for(Object oneObject:pack.getEntities().values())
-			 	    	{
-	    					Entity oneEntity = (Entity) oneObject;
-	    					String oneCode = cg.genCode(oneEntity);
-	    					
-	    					code += oneCode.replace("\n", "\n" + prefix);
-			 	    	}
+						{
+							Entity oneEntity = (Entity) oneObject;
+							String oneCode = cg.genCode(oneEntity);
+
+							code += oneCode.replace("\n", "\n" + prefix);
+						}
 						return code;
 					}
 					else
 						return cg.genCode(entity).replace("\n", "\n" + prefix);
 				}
 			}
-			
+
 		}
-		
+
 		return line;
 	}
-	
-	
+
+
 	@SuppressWarnings("rawtypes")
 	private String genFileDataWithTemplate(File file,DEVPackage pack,Entity entity)
 	{		
-	    String content = "";
+		String content = "";
 
 		if(file.exists())
 		{
 			try {
 				String line;
-			    BufferedReader reader = new BufferedReader(new FileReader(file));  
+				BufferedReader reader = new BufferedReader(new FileReader(file));  
 				line = reader.readLine();
-				
-				
-				
+
+
+
 				while(line !=null){  
-					
+
 					if(line !=null && line.contains("@<@")){
 						while(line != null)
 						{
 							String newLine = reader.readLine();
-							
+
 							line += "\n" + newLine;
 							//System.out.print(line);
 							if(newLine == null || newLine.contains("@>@"))
@@ -331,7 +331,7 @@ public class CodeSkeletonBuilder {
 							}						
 						}
 					}
-					
+
 
 					if(framework != null && line.contains("#CG "))
 					{
@@ -345,7 +345,7 @@ public class CodeSkeletonBuilder {
 							line = ioUtil.replaceF(line, "pack", pack.getName());
 						if(entity != null)
 							line = ioUtil.replaceF(line, "entity", entity.getName());
-						
+
 						if(pack != null)
 						{
 							if(ioUtil.containF(line, "eachDependPack"))
@@ -356,15 +356,18 @@ public class CodeSkeletonBuilder {
 									String oneLine =  ioUtil.replaceF(line, "eachDependPack", dependPack.getName());
 									content += oneLine + "\n";								
 								}
-							}
+							}							
 							else if(entity != null)
 							{
 								if(ioUtil.containF(line, "eachDependEntity"))
 								{
 									for(Entity dependEntity:entity.getDepends().values())
 									{
-										String oneLine =  ioUtil.replaceF(line, "eachDependEntity", dependEntity.getName());
-										content += oneLine + "\n";								
+										if(!"Contract".equals(dependEntity.getStereotype()))
+										{
+											String oneLine =  ioUtil.replaceF(line, "eachDependEntity", dependEntity.getName());
+											content += oneLine + "\n";			
+										}
 									}
 								}
 								else if(ioUtil.containF(line, "eachOp"))
@@ -389,6 +392,18 @@ public class CodeSkeletonBuilder {
 								else
 									content += genEachEntity(line,pack) + "\n"; 
 							}
+							// for autowire entity mapper
+							else if(ioUtil.containF(line, "eachDependEntity"))
+							{
+								for(Entity dependEntity:entity.getDepends().values())
+								{
+									if(!"Contract".equals(dependEntity.getStereotype()))
+									{	
+										String oneLine =  ioUtil.replaceF(line, "eachDependEntity", dependEntity.getName());
+										content += oneLine + "\n";	
+									}			
+								}
+							}
 							else if(ioUtil.containF(line, "eachService"))
 							{
 								for(Object o:pack.getEntities().values())
@@ -403,71 +418,71 @@ public class CodeSkeletonBuilder {
 							}
 							else
 								content += genEachEntity(line,pack) + "\n"; 
-							
+
 						}						
 						else if(ioUtil.containF(line, "eachPack")){
 							for(DEVPackage onePack:m_project.getPackages())
-				 	    	{
+							{
 								String oneLine =  ioUtil.replaceF(line,"eachPack", onePack.getName());
 								content += genEachEntity(oneLine,onePack) + "\n";
-				 	    	}
+							}
 						}
 						else if(ioUtil.containF(line, "eachApiPack"))
-				 		{
-				 			for(DEVPackage onePack:m_project.getApiPacks())
-				 			{
-				 				String oneLine =  ioUtil.replaceF(line,"eachApiPack", onePack.getName());
-				 				content += oneLine + "\n";
-				 			}
-				 		}
+						{
+							for(DEVPackage onePack:m_project.getApiPacks())
+							{
+								String oneLine =  ioUtil.replaceF(line,"eachApiPack", onePack.getName());
+								content += oneLine + "\n";
+							}
+						}
 						else{
 							content += line + "\n"; 
 						}
 					}
-					
-						
+
+
 					line = reader.readLine();
-			    }  
-			    reader.close();
+				}  
+				reader.close();
 			} catch (IOException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
-			
+
 		}
-		
+
 		return content;
 	}
 
-	
+
 	private String genEachEntity(String line,DEVPackage pack)
 	{
 		String content = "";
-		
-		
+
+
 		if(ioUtil.containF(line, "eachEntity")){
-			
+
 			for(Object oneObject:pack.getEntities().values())
-	    	{
+			{
 				Entity oneEntity = (Entity) oneObject;
-	 			if(!"Entity".equals(oneEntity.getStereotype()))
-	 					continue;
-	 			String oneEntityLine =  ioUtil.replaceF(line,"eachEntity", oneEntity.getName());
- 				content += oneEntityLine + "\n";
-	    	}
+				if(!"Entity".equals(oneEntity.getStereotype()))
+					continue;
+				String oneEntityLine =  ioUtil.replaceF(line,"eachEntity", oneEntity.getName());
+				content += oneEntityLine + "\n";
+			}
 			return content;
 		}
 		else if(ioUtil.containF(line, "eachContract"))
 		{
 			for(Object oneObject:pack.getEntities().values())
-	    	{
+			{
 				Entity oneEntity = (Entity) oneObject;
-	 			if(!"Contract".equals(oneEntity.getStereotype()))
-	 					continue;
-	 			String oneEntityLine =  ioUtil.replaceF(line,"eachContract", oneEntity.getName());
- 				
+				if(!"Contract".equals(oneEntity.getStereotype()))
+					continue;
+				String oneEntityLine =  ioUtil.replaceF(line,"eachContract", oneEntity.getName());
+
 				content += oneEntityLine + "\n";
-	    	}
+			}
 			return content;
 		}
 		return line;
@@ -491,5 +506,5 @@ public class CodeSkeletonBuilder {
 	public void setM_orgPath(String m_orgPath) {
 		this.m_orgPath = m_orgPath;
 	}
-	
+
 }

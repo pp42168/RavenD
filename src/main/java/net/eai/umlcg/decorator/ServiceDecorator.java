@@ -33,15 +33,38 @@ public class ServiceDecorator {
 		pack = p;
 	}
 
-	private void addResponseContract(String opName,String retName,String retType,LinkedHashMap<String,Entity> contracts)
+	private void addResponseContract(Entity service,String opName,String retName,String retType,LinkedHashMap<String,Entity> contracts)
 	{
 		//generate request contract
 		Entity contract = new Entity();
 		contract.setName(ioUtil.capFirstLetter(opName) + "Response");
 		contract.set_parent(new StarUmlReference(pack.get_id()));
 		contract.setStereotype("Contract");
-		if(retName != null && retType != null)
-			contract.addAttribute(retName,retType);
+		if(retName != null && retType != null){
+			if(service.getDepends().containsKey(retType))
+			{
+				Entity e = (Entity) service.getDepends().get(retType);
+				addResponseItemContract(retType,e,contracts);
+				retType = retType + "Item";
+			}
+			contract.addAttribute(retName,retType);			
+		}
+		pack.getOwnedElements().add(contract);
+		contracts.put(contract.getName(),contract);
+	}
+	
+	private void addResponseItemContract(String itemName,Entity itemEntity,LinkedHashMap<String,Entity> contracts)
+	{
+		//generate request contract
+		Entity contract = new Entity();
+		contract.setName(ioUtil.capFirstLetter(itemName) + "Item");
+		contract.set_parent(new StarUmlReference(pack.get_id()));
+		contract.setStereotype("Contract");
+		
+		for(EntityAttribute att:itemEntity.getAttributes())
+		{
+			contract.addAttribute(att.getName(), att.getTypeStr());
+		}
 		pack.getOwnedElements().add(contract);
 		contracts.put(contract.getName(),contract);
 	}
@@ -130,11 +153,21 @@ public class ServiceDecorator {
 				{
 					for(OperationParameter onePara : paras)
 					{
-						if(!onePara.getDirection().equals("return"))
-							contract.addAttribute(onePara.getName(), onePara.getTypeStr());
+						if(!onePara.getDirection().equals("return")){
+							if(entity.getDepends().containsKey(onePara.getTypeStr()))
+							{
+								Entity e = (Entity) entity.getDepends().get(onePara.getTypeStr());
+								for(EntityAttribute att:e.getAttributes())
+								{
+									contract.addAttribute(att.getName(), att.getTypeStr());
+								}
+							}
+							else
+								contract.addAttribute(onePara.getName(), onePara.getTypeStr());
+						}
 						else 
 						{
-							addResponseContract(op.getName(),onePara.getTypeStr(),onePara.getStereotype(),contracts);
+							addResponseContract(entity,op.getName(),onePara.getTypeStr(),onePara.getStereotype(),contracts);
 						}
 					}
 				}
@@ -155,7 +188,7 @@ public class ServiceDecorator {
 				if(!contracts.containsKey(ioUtil.capFirstLetter(op.getName()) + "Response") 
 						&& !existingContracts.containsKey(ioUtil.capFirstLetter(op.getName()) + "Response"))
 				{
-					addResponseContract(ioUtil.capFirstLetter(op.getName()),null,null,contracts);
+					addResponseContract(service,ioUtil.capFirstLetter(op.getName()),null,null,contracts);
 				}
 			}
 		}

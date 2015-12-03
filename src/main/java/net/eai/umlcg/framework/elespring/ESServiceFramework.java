@@ -66,5 +66,13 @@ public class ESServiceFramework  implements FrameworkInterface{
 		return null;
 	}
 
+	public String getM_templatePath() {
+		return m_templatePath;
+	}
+
+	public void setM_templatePath(String m_templatePath) {
+		this.m_templatePath = m_templatePath;
+	}
+
 
 }

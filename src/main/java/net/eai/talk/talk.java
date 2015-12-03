@@ -8,11 +8,12 @@ import java.util.Scanner;
 
 import net.eai.dev.DataMapper;
 import net.eai.dev.JarUtil;
-import net.eai.dev.JsonClassGen;
 import net.eai.dev.UmlException;
 import net.eai.dev.ioUtil;
 import net.eai.umlcg.basecg.*;
 import net.eai.umlcg.framework.elespring.ESServiceFramework;
+import net.eai.umlcg.scanner.EntityScanner;
+import net.eai.umlcg.scanner.JsonClassGen;
 import net.eai.umlmodel.DEVProject;
 
 public class talk {
@@ -26,12 +27,13 @@ public class talk {
 		//u.readJarPath("eleSpringTemplate");
 		//ioUtil.deleteFile("fse");
 		
-		Listener listener = new Listener();		
-		listener.listenCommand();
+		//Listener listener = new Listener();		
+		//listener.listenCommand();
 		UmlCG cg = new UmlCG();
+		//ioUtil.writeFile("f.mfj",cg.importDbTables("f"));
 		cg.setTemplatePath("templates/eleSpringTemplate");
 		try {
-			cg.gen("example.mdj", "j");
+			cg.gen("productModel.mdj", "../Product");
 		} catch (UmlException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();

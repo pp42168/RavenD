@@ -1,4 +1,4 @@
-package net.eai.dev;
+package net.eai.umlcg.scanner;
 
 import java.util.ArrayList;
 import java.util.Iterator;
@@ -6,6 +6,7 @@ import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map.Entry;
 
+import net.eai.dev.ioUtil;
 import net.eai.dev.entitycg.*;
 import net.eai.umlmodel.*;
 import net.eai.util.HttpGetter;
