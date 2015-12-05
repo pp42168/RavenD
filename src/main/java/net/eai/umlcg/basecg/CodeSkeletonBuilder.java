@@ -380,12 +380,24 @@ public class CodeSkeletonBuilder {
 								}
 								else if(ioUtil.containF(line, "eachAtt"))
 								{
+									int ind = 1;
+									int count = entity.getAttributes().size();
+									String splitToken = "";
+									if(line.contains("@,,@"))
+										splitToken = ",";
 									for(EntityAttribute att:entity.getAttributes())
 									{
 										String oneLine =  ioUtil.replaceF(line, "eachAtt", att.getName());
 										oneLine =  ioUtil.replaceF(oneLine, "attType", att.getTypeStr());
 										oneLine =  ioUtil.replaceF(oneLine, "eachAtt.document", att.getDocumentation());
 										oneLine =  ioUtil.replaceF(oneLine, "eachAtt.default", att.getDefaultValue());
+										
+										if(count != ind)
+											oneLine = oneLine.replace("@,,@", splitToken);
+										else
+											oneLine = oneLine.replace("@,,@", "");
+										
+										ind ++;
 										content += oneLine + "\n";								
 									}
 								}
